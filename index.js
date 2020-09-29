@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const cors     = require('cors');
 const morgan   = require('morgan');
 
-
+// config vars
 const port = process.env.PORT        || 3000;
 const db   = process.env.MONGODB_URI || 'mongodb://localhost/notas';
 
+// crear app
 const app = express();
 
-
+// conexion a la base de datos
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
 mongoose
@@ -19,11 +20,11 @@ mongoose
   })
   .catch(err => console.error(`Connection error ${err}`));
 
-// todo el middleware aca abajo y antes del listen
-app.use(express.json());
-app.use(cors());
-app.use(morgan('dev'));
-app.use('/api', require('./api/routes/note'));
+
+app.use(express.json());                        // 1er middleware
+app.use(cors());                                // 2do middleware
+app.use(morgan('dev'));                         // 3er middleware
+app.use('/api', require('./api/routes/note'));  // 4to middleware
 
 app.use((req, res, next) => {
   const err = new Error('Not found');
@@ -36,7 +37,7 @@ app.use((err, req, res, next) => {
   res.json({ error: err.message });
 });
 
-// listen
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
 });
